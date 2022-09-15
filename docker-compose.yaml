@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  dind:
+    image: docker:20.10-dind
+    privileged: true
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    expose:
+      - 2375
+    logging:
+      driver: none
+  app:
+    build: .
+    logging:
+      driver: "json-file"
+      options:
+        max-buffer-size: "4m"
+        mode: "non-blocking"
+    environment:
+      DOCKER_HOST: tcp://dind:2375
+      TOKEN: "${TOKEN:-tokenrequired}"
+    depends_on:
+      - dind
