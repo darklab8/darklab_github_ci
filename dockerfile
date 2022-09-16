@@ -18,19 +18,26 @@ RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install tzdata
 RUN apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin 
 
+# Docker-compose
+RUN curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+RUN chmod +x /usr/local/bin/docker-compose
+
 WORKDIR /code
 
+# installing runner
 RUN curl -o actions-runner-linux-x64-2.294.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.294.0/actions-runner-linux-x64-2.294.0.tar.gz
 RUN tar xzf ./actions-runner-linux-x64-2.294.0.tar.gz
+RUN chmod 777 -R /code
 
-RUN chmod -R 777 /code
+# only non root user can launch it
 RUN adduser --disabled-password --gecos "" user
 RUN apt install -y python3-pip
 
+USER user
+
+# deps for automating manual CLI of runner
 COPY ./requirements.txt ./constraints.txt ./
 RUN pip install -r requirements.txt -c constraints.txt
-
-USER user
 
 COPY ./run.py ./
 
