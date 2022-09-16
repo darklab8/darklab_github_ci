@@ -9,6 +9,8 @@ services:
       - 2375
     logging:
       driver: none
+    volumes:
+      - runner_folder:/code
   app:
     build: .
     logging:
@@ -21,3 +23,8 @@ services:
       TOKEN: "${TOKEN:-tokenrequired}"
     depends_on:
       - dind
+    volumes:
+      - runner_folder:/code
+
+volumes: 
+  runner_folder:
