@@ -35,13 +35,9 @@ RUN apt install -y python3-pip
 
 USER user
 
-# deps for automating manual CLI of runner
-COPY ./requirements.txt ./constraints.txt ./
-RUN pip install -r requirements.txt -c constraints.txt
-
-COPY ./run.py ./
+COPY ./github_runner.py ./
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
-CMD python3 run.py
+CMD python3 github_runner.py
