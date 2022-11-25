@@ -71,4 +71,6 @@ subprocess.run(f"runuser -l user -c 'cd /app && ./config.sh --url {args.url} --t
 print("python3: running listener")
 subprocess.Popen("dockerd", shell=True)
 subprocess.run("runuser -l user -c 'cd /app && ./run.sh'", shell=True, check=True)
+# lets run second time in case it decides to self update itself.
+subprocess.run("runuser -l user -c 'cd /app && ./run.sh'", shell=True, check=True)
 
