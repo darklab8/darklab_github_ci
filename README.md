@@ -12,3 +12,8 @@
 ### requirements:
 
 having installed docker-compose and running docker daemon
+
+### Docker hub
+
+- https://hub.docker.com/repository/docker/darkwind8/github_runner
+- see example to run in docker-compose.hub.yml
