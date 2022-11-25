@@ -22,22 +22,26 @@ RUN apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plug
 RUN curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 RUN chmod +x /usr/local/bin/docker-compose
 
-WORKDIR /code
+WORKDIR /app
 
 # installing runner
 RUN curl -o actions-runner-linux-x64-2.294.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.294.0/actions-runner-linux-x64-2.294.0.tar.gz
 RUN tar xzf ./actions-runner-linux-x64-2.294.0.tar.gz
-RUN chmod 777 -R /code
 
-# only non root user can launch it
-RUN adduser --disabled-password --gecos "" user
 RUN apt install -y python3-pip
-
-USER user
+RUN pip install requests
 
 COPY ./github_runner.py ./
+
+RUN chmod a=rwx -R /app
+# only non root user can launch it
+RUN adduser --disabled-password --gecos "" user
+RUN chown -R user /app
+WORKDIR /code
+RUN chmod a=rwx -R /code
+RUN chown -R user /code
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
-CMD python3 github_runner.py
+CMD rm -r /code/* ; cp -a /app/. /code/ && python3 /code/github_runner.py

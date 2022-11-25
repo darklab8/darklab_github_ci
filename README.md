@@ -6,6 +6,7 @@
 ### Commands
 
 - `TOKEN=your_github_token docker-compose up` in order to run it. Optionally add `-d` in order to run in background.
+- `TOKEN_ORG=org_api_token ORG=org_name docker-compose up` for self registry in organization
 - `docker-compose down --volume` to destroy configured runner
 
 ### requirements:

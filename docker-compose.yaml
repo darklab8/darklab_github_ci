@@ -10,7 +10,7 @@ services:
     logging:
       driver: none
     volumes:
-      - runner_folder:/code
+      - ./data:/code
   app:
     build: .
     logging:
@@ -20,11 +20,10 @@ services:
         mode: "non-blocking"
     environment:
       DOCKER_HOST: tcp://dind:2375
-      TOKEN: "${TOKEN:-tokenrequired}"
+      TOKEN: "${TOKEN:-forregistrytoken}"
+      TOKEN_ORG: "${TOKEN_ORG:-fororgregistry}"
+      ORG: "${ORG:-fororgregistry}"
     depends_on:
       - dind
     volumes:
-      - runner_folder:/code
-
-volumes: 
-  runner_folder:
+      - ./data:/code
