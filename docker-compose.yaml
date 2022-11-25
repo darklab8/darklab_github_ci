@@ -1,18 +1,8 @@
 version: '3.8'
 services:
-  dind:
-    image: docker:20.10-dind
-    privileged: true
-    environment:
-      DOCKER_TLS_CERTDIR: ""
-    expose:
-      - 2375
-    logging:
-      driver: none
-    volumes:
-      - ./data:/code
   app:
     build: .
+    privileged: true
     logging:
       driver: "json-file"
       options:
@@ -23,7 +13,4 @@ services:
       TOKEN: "${TOKEN:-forregistrytoken}"
       TOKEN_ORG: "${TOKEN_ORG:-fororgregistry}"
       ORG: "${ORG:-fororgregistry}"
-    depends_on:
-      - dind
-    volumes:
-      - ./data:/code
+      DOCKER_TLS_CERTDIR: ""

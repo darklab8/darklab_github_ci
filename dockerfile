@@ -31,17 +31,17 @@ RUN tar xzf ./actions-runner-linux-x64-2.294.0.tar.gz
 RUN apt install -y python3-pip
 RUN pip install requests
 
-COPY ./github_runner.py ./
-
 RUN chmod a=rwx -R /app
 # only non root user can launch it
 RUN adduser --disabled-password --gecos "" user
 RUN chown -R user /app
-WORKDIR /code
-RUN chmod a=rwx -R /code
-RUN chown -R user /code
+
+RUN apt install -y docker
+RUN usermod -aG docker user
+
+COPY ./github_runner.py ./
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
-CMD rm -r /code/* ; cp -a /app/. /code/ && python3 /code/github_runner.py
+CMD python3 ./github_runner.py

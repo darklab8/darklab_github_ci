@@ -66,8 +66,9 @@ if args.token_org:
 print("starting to parsed args")
 
 print("trying to configure")
-subprocess.run(f"runuser -l user -c 'cd /code && ./config.sh --url {args.url} --token {token}'", shell=True)
+subprocess.run(f"runuser -l user -c 'cd /app && ./config.sh --url {args.url} --token {token}'", shell=True)
 
 print("python3: running listener")
-subprocess.run("runuser -l user -c 'cd /code && ./run.sh'", shell=True, check=True)
+subprocess.Popen("dockerd", shell=True)
+subprocess.run("runuser -l user -c 'cd /app && ./run.sh'", shell=True, check=True)
 
