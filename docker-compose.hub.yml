@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   app:
-    image: darkwind8/github_runner:v0.0.1
+    image: darkwind8/github_runner:v0.0.2
     privileged: true
     environment:
       TOKEN: "${TOKEN:-forregistrytoken}"

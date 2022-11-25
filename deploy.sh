@@ -1,5 +1,4 @@
 #!/bin/sh
-# latest deployed version v0.0.1
 set -e
 set -x
 

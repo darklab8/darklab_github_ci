@@ -82,9 +82,9 @@ class GithubRunner:
             print("python3: running dockerd")
             subprocess.Popen("dockerd", shell=True)
             print("running main proc")
-            subprocess.run(f"runuser -l user -c 'cd /app && ./run.sh", shell=True)
+            subprocess.run(f"runuser -l user -c 'cd /app && ./run.sh'", shell=True, check=True)
             # in case of reload from update
-            subprocess.run(f"runuser -l user -c 'cd /app && ./run.sh", shell=True)
+            subprocess.run(f"runuser -l user -c 'cd /app && ./run.sh'", shell=True, check=True)
         finally:
             self._shutdown()
 
