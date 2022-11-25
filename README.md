@@ -1,7 +1,7 @@
 ### Description
 
 - Github Actions self hosted runner as docker-compose without interactive input
-- With side car container with docker in docker available (docker-compose) to self hosted runner jobs :)
+- With docker in docker available (docker-compose) to self hosted runner jobs :)
 
 ### Commands
 
