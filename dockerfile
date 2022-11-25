@@ -25,8 +25,8 @@ RUN chmod +x /usr/local/bin/docker-compose
 WORKDIR /app
 
 # installing runner
-RUN curl -o actions-runner-linux-x64-2.294.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.294.0/actions-runner-linux-x64-2.294.0.tar.gz
-RUN tar xzf ./actions-runner-linux-x64-2.294.0.tar.gz
+RUN curl -o action-runner.tar.gz -L https://github.com/actions/runner/releases/download/v2.299.1/actions-runner-linux-x64-2.299.1.tar.gz
+RUN tar xzf ./action-runner.tar.gz
 
 RUN apt install -y python3-pip
 RUN pip install requests
@@ -38,6 +38,11 @@ RUN chown -R user /app
 
 RUN apt install -y docker
 RUN usermod -aG docker user
+
+# upttime dep https://github.com/upptime/upptime
+RUN curl -sL https://deb.nodesource.com/setup_14.x -o /tmp/nodesource_setup.sh
+RUN bash /tmp/nodesource_setup.sh
+RUN apt install -y nodejs
 
 COPY ./github_runner.py ./
 

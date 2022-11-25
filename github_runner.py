@@ -4,6 +4,7 @@ import requests
 import argparse
 import os
 import subprocess
+from dataclasses import dataclass
 
 print("inited libs")
 parser = argparse.ArgumentParser()
@@ -18,8 +19,6 @@ parser.add_argument(
 # Get Token Runner
 # https://docs.github.com/en/rest/actions/self-hosted-runners#create-a-registration-token-for-an-organization
 
-import os
-print(os.environ)
 parser.add_argument(
     '--token-org',
     type=str,
@@ -44,33 +43,58 @@ parser.add_argument(
     default=os.environ.get("TOKEN"),
 )
 
-args = parser.parse_args()
+@dataclass
+class GithubRunnerArgs:
+    url: str
+    token: str
 
-token = args.token
+class GithubRunner:
 
-print(f"{args.token_org=}")
-if args.token_org:
-    response = requests.post(
-        url=f"https://api.github.com/orgs/{args.org}/actions/runners/registration-token",
-        headers=dict(
-            Accept="application/vnd.github+json",
-            Authorization=f"Bearer {args.token_org}",
-        ),
-    )
-    data = response.json()
-    print("queried REST API for token")
-    print(data)
+    def __init__(self, args: GithubRunnerArgs = None):
+        if args is not None:
+            self.args = args
+            return
 
-    token = data["token"]
+        print("starting to parse args")
+        args = parser.parse_args()
 
-print("starting to parsed args")
+        token = args.token
 
-print("trying to configure")
-subprocess.run(f"runuser -l user -c 'cd /app && ./config.sh --url {args.url} --token {token}'", shell=True)
+        if args.token_org:
+            response = requests.post(
+                url=f"https://api.github.com/orgs/{args.org}/actions/runners/registration-token",
+                headers=dict(
+                    Accept="application/vnd.github+json",
+                    Authorization=f"Bearer {args.token_org}",
+                ),
+            )
+            data = response.json()
+            print("queried REST API for token")
 
-print("python3: running listener")
-subprocess.Popen("dockerd", shell=True)
-subprocess.run("runuser -l user -c 'cd /app && ./run.sh'", shell=True, check=True)
-# lets run second time in case it decides to self update itself.
-subprocess.run("runuser -l user -c 'cd /app && ./run.sh'", shell=True, check=True)
+            token = data["token"]
+        
+        self.params = GithubRunnerArgs(url=args.url, token=token)
 
+    def run(self):
+        try:
+            print("trying to configure")
+            subprocess.run(f"runuser -l user -c 'cd /app && ./config.sh --labels upptime --url {self.params.url} --token {self.params.token}'", shell=True)
+            print("python3: running dockerd")
+            subprocess.Popen("dockerd", shell=True)
+            print("running main proc")
+            subprocess.run(f"runuser -l user -c 'cd /app && ./run.sh", shell=True)
+            # in case of reload from update
+            subprocess.run(f"runuser -l user -c 'cd /app && ./run.sh", shell=True)
+        finally:
+            self._shutdown()
+
+    def _shutdown(self):
+        subprocess.run(f"runuser -l user -c 'cd /app && ./config.sh remove --token {self.params.token}'", shell=True)    
+        print("End of the program. I was killed gracefully :)")
+
+def main():
+    runner = GithubRunner()
+    runner.run()
+
+if __name__=="__main__":
+    main()
