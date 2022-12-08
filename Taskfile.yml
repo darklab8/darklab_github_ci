@@ -2,8 +2,14 @@ version: '3'
 tasks:
   build:
     cmds:
-      - docker build --tag github_runner:org --target build-org .
-      - docker build --tag github_runner:org-nodejs-14 --target build-org-nodejs-14 .
+      - docker build
+        --tag github_runner:org
+        --build-arg LABELS=darklab8,basic
+        --target build-org .
+      - docker build
+        --tag github_runner:org-nodejs-14
+        --build-arg LABELS=darklab8,nodejs-14
+        --target build-org-nodejs-14 .
       - task: tag
         vars:
           TAG: "org"
@@ -51,7 +57,7 @@ tasks:
     cmds:
       - defer: runuser -l user -c 'cd /app && ./config.sh remove --token {{.TOKEN}}'
       - sleep 2 && echo 'receveing token'
-      - runuser -l user -c 'cd /app && ./config.sh --labels upptime --url {{.ORG_URL}} --token {{.TOKEN}} --unattended --disableupdate'
+      - runuser -l user -c 'cd /app && ./config.sh --labels {{.LABELS}} --url {{.ORG_URL}} --token {{.TOKEN}} --unattended --disableupdate'
       - dockerd & runuser -l user -c 'cd /app && ./run.sh'
     env:
       ORG_URL: undefined

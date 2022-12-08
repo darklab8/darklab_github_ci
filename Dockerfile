@@ -39,6 +39,9 @@ RUN usermod -aG docker user
 RUN sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
 RUN apt-get -y install jq
 
+ARG LABELS
+ENV LABELS=$LABELS
+
 ENTRYPOINT task org:launch
 
 
@@ -46,7 +49,6 @@ FROM base as build-org
 COPY ./Taskfile.yml ./
 
 
-# upttime dep https://github.com/upptime/upptime
 FROM base as build-org-nodejs-14
 RUN curl -sL https://deb.nodesource.com/setup_14.x -o /tmp/nodesource_setup.sh
 RUN bash /tmp/nodesource_setup.sh

@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   app:
-    image: github_runner:org
+    image: github_runner:org-nodejs-14
     privileged: true
     environment:
       ORG_TOKEN: "${ORG_TOKEN:-undefined}"
