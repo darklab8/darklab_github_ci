@@ -4,24 +4,48 @@ tasks:
     cmds:
       - docker build --tag github_runner:org --target build-org .
       - docker build --tag github_runner:org-nodejs-14 --target build-org-nodejs-14 .
-  
-  tag-and-push:
+      - task: tag
+        vars:
+          TAG: "org"
+      - task: tag
+        vars:
+          TAG: "org-nodejs-14"
+    vars:
+      VERSION:
+        sh: git-conventional-commits version
+
+  tag:
     cmds:
       - docker tag github_runner:{{.TAG}} darkwind8/github_runner:{{.TAG}}-latest
       - docker tag github_runner:{{.TAG}} darkwind8/github_runner:{{.TAG}}-{{.VERSION}}
+    vars:
+      VERSION:
+        sh: git-conventional-commits version
+
+  push:
+    cmds:
       - docker push darkwind8/github_runner:{{.TAG}}-latest
       - docker push darkwind8/github_runner:{{.TAG}}-{{.VERSION}}
+    vars:
+      VERSION:
+        sh: echo 'git-conventional-commits version'
 
   deploy:
     cmds:
       - task: build
-      - { task: tag-and-push, vars: {TAG: "org", VERSION: "{{.VERSION}}"} }
-      - { task: tag-and-push, vars: {TAG: "org-nodejs-14", VERSION: "{{.VERSION}}"} }
-    env:
-      VERSION: undefined
-    preconditions:
-      - sh: "[ $VERSION != undefined ]"
+      - task: push
+        vars:
+          TAG: "org"
+      - task: push
+        vars:
+          TAG: "org-nodejs-14"
 
+  version:
+    cmds:
+      - echo {{.VERSION}}
+    vars:
+      VERSION:
+        sh: git-conventional-commits version
 
   org:launch:
     cmds:
