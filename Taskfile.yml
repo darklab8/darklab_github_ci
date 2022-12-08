@@ -45,6 +45,15 @@ tasks:
       - task: push
         vars:
           TAG: "org-nodejs-14"
+      - task: git-tag
+
+  git-tag:
+    cmds:
+      - git tag v{{.VERSION}}
+      - git push origin v{{.VERSION}}
+    vars:
+      VERSION:
+        sh: git-conventional-commits version
 
   version:
     cmds:
