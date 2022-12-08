@@ -4,11 +4,11 @@ tasks:
     cmds:
       - docker build
         --tag github_runner:org
-        --build-arg LABELS=darklab8,basic
+        --build-arg LABELS=darklab8,basic,v{{.VERSION}}
         --target build-org .
       - docker build
         --tag github_runner:org-nodejs-14
-        --build-arg LABELS=darklab8,nodejs-14
+        --build-arg LABELS=darklab8,nodejs-14,v{{.VERSION}}
         --target build-org-nodejs-14 .
       - task: tag
         vars:
