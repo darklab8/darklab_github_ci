@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:20.04 as base
 
 WORKDIR /install
 
@@ -28,9 +28,6 @@ WORKDIR /app
 RUN curl -o action-runner.tar.gz -L https://github.com/actions/runner/releases/download/v2.299.1/actions-runner-linux-x64-2.299.1.tar.gz
 RUN tar xzf ./action-runner.tar.gz
 
-RUN apt install -y python3-pip
-RUN pip install requests
-
 RUN chmod a=rwx -R /app
 # only non root user can launch it
 RUN adduser --disabled-password --gecos "" user
@@ -39,14 +36,19 @@ RUN chown -R user /app
 RUN apt install -y docker
 RUN usermod -aG docker user
 
+RUN sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+RUN apt-get -y install jq
+
+ENTRYPOINT task org:launch
+
+
+FROM base as build-org
+COPY ./Taskfile.yml ./
+
+
 # upttime dep https://github.com/upptime/upptime
+FROM base as build-org-nodejs-14
 RUN curl -sL https://deb.nodesource.com/setup_14.x -o /tmp/nodesource_setup.sh
 RUN bash /tmp/nodesource_setup.sh
 RUN apt install -y nodejs
-
-COPY ./github_runner.py ./
-
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
-
-CMD python3 ./github_runner.py
+COPY ./Taskfile.yml ./

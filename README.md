@@ -1,15 +1,12 @@
 ### Description
 
-- Github Actions self hosted runner as docker-compose without interactive input
-- With docker in docker available (docker-compose) to self hosted runner jobs :)
+- Github Actions self hosted runner as docker-compose without interactive input for organization registration
 
 ### Commands
 
-- `TOKEN=your_github_token docker-compose up` in order to run it. Optionally add `-d` in order to run in background.
-- `TOKEN_ORG=org_api_token ORG=org_name docker-compose up` for self registry in organization
-- `docker-compose down --volume` to destroy configured runner
+- `ORG_URL=https://github.com/${YOURORG} ORG_NAME=${YOUR_ORG} ORG_TOKEN=${YOUR_TOKEN} docker run -it --privileged darkwind8/github_runner:org-latest`
 
-### requirements:
+### Requirements:
 
 having installed docker-compose and running docker daemon
 

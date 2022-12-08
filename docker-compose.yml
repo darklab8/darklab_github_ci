@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  app:
+    image: github_runner:org
+    privileged: true
+    environment:
+      ORG_TOKEN: "${ORG_TOKEN:-undefined}"
+      ORG_NAME: "${ORG_NAME:-undefined}"
+      ORG_URL: "${ORG_URL:-undefined}"
+      DOCKER_TLS_CERTDIR: ""
