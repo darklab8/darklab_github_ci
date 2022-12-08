@@ -23,7 +23,7 @@ tasks:
   tag:
     cmds:
       - docker tag github_runner:{{.TAG}} darkwind8/github_runner:{{.TAG}}-latest
-      - docker tag github_runner:{{.TAG}} darkwind8/github_runner:{{.TAG}}-{{.VERSION}}
+      - docker tag github_runner:{{.TAG}} darkwind8/github_runner:{{.TAG}}-v{{.VERSION}}
     vars:
       VERSION:
         sh: git-conventional-commits version
@@ -31,7 +31,7 @@ tasks:
   push:
     cmds:
       - docker push darkwind8/github_runner:{{.TAG}}-latest
-      - docker push darkwind8/github_runner:{{.TAG}}-{{.VERSION}}
+      - docker push darkwind8/github_runner:{{.TAG}}-v{{.VERSION}}
     vars:
       VERSION:
         sh: git-conventional-commits version
