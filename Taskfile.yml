@@ -34,7 +34,7 @@ tasks:
       - docker push darkwind8/github_runner:{{.TAG}}-{{.VERSION}}
     vars:
       VERSION:
-        sh: echo 'git-conventional-commits version'
+        sh: git-conventional-commits version
 
   deploy:
     cmds:
