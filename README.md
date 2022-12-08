@@ -4,7 +4,7 @@
 
 ### Commands
 
-- `ORG_URL=https://github.com/${YOURORG} ORG_NAME=${YOUR_ORG} ORG_TOKEN=${YOUR_TOKEN} docker run -it --privileged darkwind8/github_runner:org-latest`
+- `ORG_URL=https://github.com/${YOUR_ORG} ORG_NAME=${YOUR_ORG} ORG_TOKEN=${YOUR_TOKEN} docker run -it --privileged darkwind8/github_runner:org-latest`
 
 ### Requirements:
 
